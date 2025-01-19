@@ -7,17 +7,10 @@ import org.apache.hadoop.mapreduce.Mapper;
 import java.io.IOException;
 
 public class RelationshipMapper extends Mapper<LongWritable, Relationship, Text, Text> {
-    private Text keyOut = new Text();
-    private Text valueOut = new Text();
-
     @Override
-    public void map(LongWritable key, Relationship value, Context context) throws IOException, InterruptedException {
-        keyOut.set(value.getId1());
-        valueOut.set(value.getId2());
-        context.write(keyOut, valueOut);
+    protected void map(LongWritable key, Relationship value, Context context) throws IOException, InterruptedException {
 
-        keyOut.set(value.getId2());
-        valueOut.set(value.getId1());
-        context.write(keyOut, valueOut);
+        context.write(new Text(value.getId1()), new Text(value.getId2()));
+        context.write(new Text(value.getId2()), new Text(value.getId1()));
     }
 }
